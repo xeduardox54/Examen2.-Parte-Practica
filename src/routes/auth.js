@@ -16,6 +16,7 @@ import {
     disburseAccount,
     transferAccount
 } from '../components/accounts/controller';
+import getTransferences from '../components/transferences/controller';
 import validationHandler from '../utils/middlewares/validationHandler';
 import {getDelEntitySchema,createEntitySchema,updateEntitySchema} from '../components/entities/domain/entity';
 import {getDelAccountSchema,createAccountSchema,updateAccountSchema} from '../components/accounts/domain/account';
@@ -38,4 +39,6 @@ router.put('/api/abonar/:id',payAccount);
 router.put('/api/desembolsar/:id',disburseAccount);
 //API para transferir dinero
 router.put('/api/transferir/:id',transferAccount);
+//API para revisar transferencias
+router.get('/api/transferencias/:id',getTransferences);
 export default router;

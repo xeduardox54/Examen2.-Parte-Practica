@@ -1,4 +1,6 @@
 import MongoAccountsRepository from './infraestructure/MongoAccountsRepository'
+import MongoTransferencesRepository from '../transferences/infraestructure/MongoTransferencesRepository'
+import addTransference from './application/createTransference'
 import getAccount from './application/getAccount'
 import getAllAccounts from './application/getAllAccounts'
 import createAccount from './application/createAccount'
@@ -7,6 +9,7 @@ import deleteAccount from './application/deleteAccount'
 import payOneAccount from './application/payAccount'
 import disburseOneAccount from './application/disburseAccount'
 const AccountsRepository = new MongoAccountsRepository()
+const TransferencesRepository = new MongoTransferencesRepository()
 
 /**
  * @param {import('express').Request} _
@@ -123,13 +126,18 @@ export const transferAccount = async (req, res, next) => {
     const accountDisbursed = await query({id:req.query.cuenta1},req.query,account1)
     query = payOneAccount({ AccountsRepository: AccountsRepository })
     const accountPayed = await query({id:req.query.cuenta2},req.query,account2)
+    //Creando el registro de transferencia
+    query = addTransference({TransferencesRepository: TransferencesRepository})
+    const transference = await query(req.params.id,account1._id,account2._id,req.query.cantidad)
     res.status(200).json({
       data: [
         accountDisbursed,
         accountPayed,
       ],
+      registro: transference,
       message: 'Crédito transferido',
     })
+
   } catch (e) {
     next(e)
   }
