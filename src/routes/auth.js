@@ -11,7 +11,9 @@ import {
     getAccounts,
     newAccount,
     updAccount,
-    delAccount
+    delAccount,
+    payAccount,
+    disburseAccount
 } from '../components/accounts/controller';
 import validationHandler from '../utils/middlewares/validationHandler';
 import {getDelEntitySchema,createEntitySchema,updateEntitySchema} from '../components/entities/domain/entity';
@@ -30,4 +32,7 @@ router.get('/api/cuentas',validationHandler(getDelAccountSchema),getAccounts);
 router.post('/api/cuentas',validationHandler(createAccountSchema),newAccount);
 router.put('/api/cuentas/:id',validationHandler(updateAccountSchema),updAccount);
 router.delete('/api/cuentas/:id',validationHandler(getDelAccountSchema),delAccount);
+//API para abonar y desembolsar cuenta
+router.put('/api/abonar/:id',payAccount);
+router.put('/api/desembolsar/:id',disburseAccount);
 export default router;

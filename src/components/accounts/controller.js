@@ -4,6 +4,8 @@ import getAllAccounts from './application/getAllAccounts'
 import createAccount from './application/createAccount'
 import updateAccount from './application/updateAccount'
 import deleteAccount from './application/deleteAccount'
+import payOneAccount from './application/payAccount'
+import disburseOneAccount from './application/disburseAccount'
 const AccountsRepository = new MongoAccountsRepository()
 
 /**
@@ -71,6 +73,38 @@ export const delAccount = async (req, res, next) => {
     res.status(201).json({
       id: id,
       message: 'Cuenta eliminada',
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const payAccount = async (req, res, next) => {
+  try {
+    var query = getAccount({ AccountsRepository: AccountsRepository })
+    const oldAccount = await query(req.params)
+    if (oldAccount == null) res.status(200).json({message: 'Cuenta no encontrada'})
+    query = payOneAccount({ AccountsRepository: AccountsRepository })
+    const account = await query(req.params,req.query,oldAccount)
+    res.status(200).json({
+      data: account,
+      message: 'Crédito abonado',
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const disburseAccount = async (req, res, next) => {
+  try {
+    var query = getAccount({ AccountsRepository: AccountsRepository })
+    const oldAccount = await query(req.params)
+    if (oldAccount == null) res.status(200).json({message: 'Cuenta no encontrada'})
+    query = disburseOneAccount({ AccountsRepository: AccountsRepository })
+    const account = await query(req.params,req.query,oldAccount)
+    res.status(200).json({
+      data: account,
+      message: 'Crédito desembolsado',
     })
   } catch (e) {
     next(e)
