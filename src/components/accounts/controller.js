@@ -110,3 +110,27 @@ export const disburseAccount = async (req, res, next) => {
     next(e)
   }
 }
+
+export const transferAccount = async (req, res, next) => {
+  try {
+    var query = getAccount({ AccountsRepository: AccountsRepository })
+    const account1 = await query({id:req.query.cuenta1})
+    const account2 = await query({id:req.query.cuenta2})
+    if (account1 == null || account2 == null) {res.status(200).json({message: 'Cuenta no encontrada'}); return}
+    if (account1.owner_id != account2.owner_id) {res.status(200).json({message: 'Las cuentas deben ser de la misma entidad'}); return}
+    if (parseInt(account1.credit) < parseInt(req.query.cantidad)) {res.status(200).json({message: 'Saldo insuficiente'}); return}
+    query = disburseOneAccount({ AccountsRepository: AccountsRepository })
+    const accountDisbursed = await query({id:req.query.cuenta1},req.query,account1)
+    query = payOneAccount({ AccountsRepository: AccountsRepository })
+    const accountPayed = await query({id:req.query.cuenta2},req.query,account2)
+    res.status(200).json({
+      data: [
+        accountDisbursed,
+        accountPayed,
+      ],
+      message: 'Crédito transferido',
+    })
+  } catch (e) {
+    next(e)
+  }
+}
