@@ -8,6 +8,7 @@ import updateAccount from './application/updateAccount'
 import deleteAccount from './application/deleteAccount'
 import payOneAccount from './application/payAccount'
 import disburseOneAccount from './application/disburseAccount'
+import getCredit from './application/getCredit'
 const AccountsRepository = new MongoAccountsRepository()
 const TransferencesRepository = new MongoTransferencesRepository()
 
@@ -138,6 +139,38 @@ export const transferAccount = async (req, res, next) => {
       message: 'Crédito transferido',
     })
 
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getCreditAccount = async (req, res, next) => {
+  try {
+    const query = getCredit({ AccountsRepository: AccountsRepository })
+    const account = await query(req.params)
+    if (account == null) res.status(200).json({message: 'Cuenta no encontrada'})
+    res.status(200).json({
+      saldo: account.credit,
+      message: 'Información de saldo recibida',
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getAllCreditAccount = async (req, res, next) => {
+  try {
+    const query = getAllAccounts ({ AccountsRepository: AccountsRepository })
+    const accounts = await query()
+    var credits = 0
+    accounts.map((account)=>{
+      console.log(account.owner_id==req.params.id)
+      if (account.owner_id==req.params.id) credits+=account.credit
+    })
+    res.status(200).json({
+      saldo_total: credits,
+      message: 'Información de todo el saldo recibida',
+    })
   } catch (e) {
     next(e)
   }

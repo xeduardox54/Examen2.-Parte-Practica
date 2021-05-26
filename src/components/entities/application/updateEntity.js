@@ -4,11 +4,10 @@
  * @param {import('../infraestructure/MongoEntitiesRepository')} obj.EntitiesRepository
  */
  export default ({ EntitiesRepository }) => {
-    return async ({id},{name,type,accounts}) => {
+    return async ({id},{name,type}) => {
         const Entity = {
             name: name,
-            type: type,
-            accounts: accounts,
+            type: type
         };
         return EntitiesRepository.update(id,Entity)
     }

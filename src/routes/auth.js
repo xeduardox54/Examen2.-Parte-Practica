@@ -14,7 +14,9 @@ import {
     delAccount,
     payAccount,
     disburseAccount,
-    transferAccount
+    transferAccount,
+    getCreditAccount,
+    getAllCreditAccount
 } from '../components/accounts/controller';
 import getTransferences from '../components/transferences/controller';
 import validationHandler from '../utils/middlewares/validationHandler';
@@ -41,4 +43,8 @@ router.put('/api/desembolsar/:id',disburseAccount);
 router.put('/api/transferir/:id',transferAccount);
 //API para revisar transferencias
 router.get('/api/transferencias/:id',getTransferences);
+//API para obtener saldo de cupo
+router.get('/api/saldo/:id',getCreditAccount);
+//API para obtener saldo total
+router.get('/api/saldo_total/:id',getAllCreditAccount);
 export default router;
