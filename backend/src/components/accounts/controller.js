@@ -164,7 +164,6 @@ export const getAllCreditAccount = async (req, res, next) => {
     const accounts = await query()
     var credits = 0
     accounts.map((account)=>{
-      console.log(account.owner_id==req.params.id)
       if (account.owner_id==req.params.id) credits+=account.credit
     })
     res.status(200).json({
